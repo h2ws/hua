@@ -7,6 +7,7 @@ class Database {
     private ArrayList<Plan> plans = new ArrayList<>();
     private ArrayList<Contract> contracts = new ArrayList<>();
     private ArrayList<Claim> claims = new ArrayList<>();
+    private ArrayList<Company> companys = new ArrayList<>();
 
     void insertHome(Home home) {
         homes.add(home);
@@ -32,6 +33,10 @@ class Database {
         contracts.add(contract);
     }
 
+    void insertCompany(Company company) {
+        companys.add(company);
+    }
+
     Plan getPlan(String name) {
         for (Plan plan : plans) {
             if (plan.name.equals(name))
@@ -54,6 +59,14 @@ class Database {
         return planExist;
     }
 
+    Company getCompany(String companyName) {
+        for (Company company : companys) {
+            if (company.getCompanyName().equals(companyName))
+                return company;
+        }
+        return null;
+    }
+
     Customer getCustomer(String name) {
         for (Customer customer : customers) {
             if (customer.getName().equals(name))
@@ -70,27 +83,52 @@ class Database {
         return null;
     }
 
-    /**
-     * There is at most one home owned by each person.
-     */
-    Home getHome(String ownnerName) {
+    Home getHomeByPostalCode(String postalCode) {
         for (Home home : homes) {
-            if (home.getOwnerName().equals(ownnerName))
+            if (home.getPostalCode().equals(postalCode))
                 return home;
         }
         return null;
     }
-
-    /**
-     * There is at most one car owned by each person.
-     */
-    Car getCar(String ownnerName) {
+    
+    Car getCarByPlateNumber(String plateNumber) {
         for (Car car : cars) {
-            if (car.getOwnerName().equals(ownnerName))
+            if (car.getPlateNumber().equals(plateNumber))
                 return car;
         }
         return null;
     }
+
+    long totalWealthAmountByCompany(Company company) {
+        long totalAmount = 0;
+        for (Company eachCompany : companys) {
+	    if(eachCompany.getOwnerName().equals(company.getCompanyName())) {
+	        totalAmount += totalWealthAmountByCompany(eachCompany);
+	    }
+	}
+	return totalAmount+company.getValue();
+    }
+
+    long totalWealthAmountByCustomer(Customer customer) {
+	long totalAmount = 0;
+        for (Company company : companys) {
+	    if(company.getOwnerName().equals(customer.getName())) {
+	        totalAmount += totalWealthAmountByCompany(company);
+	    }
+	}
+        for (Home home : homes) {
+	    if(home.getOwnerName().equals(customer.getName())) {
+	        totalAmount += home.getValue();
+	    }
+	}
+        for (Car car : cars) {
+	    if(car.getOwnerName().equals(customer.getName())) {
+	        totalAmount += car.getValue();
+	    }
+	}
+	return totalAmount;
+    }
+
 
     long totalClaimAmountByCustomer(String customerName) {
         long totalClaimed = 0;

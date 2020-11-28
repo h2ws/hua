@@ -25,7 +25,10 @@ class CarPlan extends Plan {
     }
 
     @Override
-    Insurable getInsuredItem(Customer customer, Database database) {
-        return database.getCar(customer.getName());
+    Insurable getInsuredItem(Customer customer, Claim claim, Database database) {
+        Insurable car = database.getCarByPlateNumber(claim.getInsurableId());
+	if ( car == null ) return null;
+	if ( !car.getOwnerName().equals(customer.getName()) ) return null;
+	return car;
     }
 }

@@ -12,6 +12,7 @@ abstract class Plan {
     boolean nullValue = true;
     RangeCriterion customerAgeCriterion = new RangeCriterion();
     RangeCriterion customerIncomeCriterion = new RangeCriterion();
+    RangeCriterion customerWealthCriterion = new RangeCriterion();
 
     Plan(HashMap<String, ArrayList<Tag>> tags) { //Assign the value of the corresponding position to the variable.
         if (tags.get("NAME") != null) { //It should be exist first then we can use it.
@@ -47,14 +48,19 @@ abstract class Plan {
                 customerIncomeCriterion.addCriterion(tag);
             }
         }
+        if (tags.get("CUSTOMER.WEALTH") != null) {
+            for (Tag tag: tags.get("CUSTOMER.WEALTH")) {
+                customerWealthCriterion.addCriterion(tag);
+            }
+        }
 
     }
 
     abstract boolean isEligible(Insurable insurable, Date date);
 
-    abstract Insurable getInsuredItem(Customer customer, Database database);
+    abstract Insurable getInsuredItem(Customer customer, Claim claim,  Database database);
 
-    boolean isEligible(Customer customer, Date currentDate) {
+    boolean isEligible(Customer customer, Date currentDate, Database database) {
         // Extracting the approximate age of the customer (just based on the calendar years)
         LocalDate localCurrentDate = currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate localBirthDate = customer.getDateOfBirth().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -63,7 +69,8 @@ abstract class Plan {
         if (!customerAgeCriterion.isInRange(age))
             return false;
         // Checking if the income is in the range.
-        return customerIncomeCriterion.isInRange(customer.getIncome());
+        return customerIncomeCriterion.isInRange(customer.getIncome()) &&
+               customerWealthCriterion.isInRange(database.totalWealthAmountByCustomer(customer));
     }
 
     String getName() {

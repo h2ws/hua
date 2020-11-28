@@ -19,7 +19,6 @@ class Contract {
         planName = tags.get("PLAN_NAME").get(0).getValue();
         startDate = Utils.convertDate(tags.get("START_DATE").get(0).getValue());
         endDate = Utils.convertDate(tags.get("END_DATE").get(0).getValue());
-        discountPercentage = Integer.parseInt(tags.get("DISCOUNT_PERCENTAGE").get(0).getValue());
     }
 
     public String getCustomerName() {

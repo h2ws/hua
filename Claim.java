@@ -8,6 +8,7 @@ class Claim {
     private long amount;
     private Date date;
     private boolean successful;
+    private String insurableId;
 
     static final String inputTag = "CLAIM";
 
@@ -15,6 +16,11 @@ class Claim {
         contractName = tags.get("CONTRACT_NAME").get(0).getValue();
         date = Utils.convertDate(tags.get("DATE").get(0).getValue());
         amount = Long.parseLong(tags.get("AMOUNT").get(0).getValue());
+        insurableId = tags.get("INSURABLE_ID").get(0).getValue();
+    }
+
+    public String getInsurableId() {
+        return insurableId;
     }
 
     public String getContractName() {

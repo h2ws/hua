@@ -9,6 +9,7 @@ class Car extends Insurable {
     private String model;
     private Date purchaseDate;
     private long mileage;
+    private String plateNumber;
 
     static final String inputTag = "CAR";
 
@@ -18,6 +19,11 @@ class Car extends Insurable {
         model = tags.get("MODEL").get(0).getValue();
         purchaseDate = Utils.convertDate(tags.get("PURCHASE_DATE").get(0).getValue());
         mileage = Long.parseLong(tags.get("MILEAGE").get(0).getValue());
+        plateNumber = tags.get("PLATE_NUMBER").get(0).getValue();
+    }
+
+    public String getPlateNumber() {
+        return plateNumber;
     }
 
     public String getOwnerName() {

@@ -51,6 +51,8 @@ class BlockCommand extends Command {
             database.insertPlan(new HomePlan(tags));
         } if (blockType.equals(CarPlan.inputTag)) {
             database.insertPlan(new CarPlan(tags));
+        } if (blockType.equals(Company.inputTag)) {
+            database.insertCompany(new Company(tags));
         }
     }
 
@@ -58,7 +60,7 @@ class BlockCommand extends Command {
         Contract contract = database.getContract(claim.getContractName());
         Customer customer = database.getCustomer(contract.getCustomerName());
         Plan plan = database.getPlan(contract.getPlanName());
-        Insurable insurable = plan.getInsuredItem(customer, database);
+        Insurable insurable = plan.getInsuredItem(customer, claim, database);
 
         // If the claimed amount is higher than covered by the plan.
         if (plan.getMaxCoveragePerClaim() < claim.getAmount())
@@ -69,7 +71,7 @@ class BlockCommand extends Command {
             return false;
 
         // If the customer was not eligible.
-        if (!plan.isEligible(customer, claim.getDate()))
+        if (!plan.isEligible(customer, claim.getDate(), database))
             return false;
 
         return plan.isEligible(insurable, claim.getDate());

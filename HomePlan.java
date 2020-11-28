@@ -40,9 +40,13 @@ class HomePlan extends Plan {
         return homeAgeCriterion.isInRange(age);
     }
 
+
     @Override
-    Insurable getInsuredItem(Customer customer, Database database) {
-        return database.getHome(customer.getName());
+    Insurable getInsuredItem(Customer customer, Claim claim, Database database) {
+        Insurable home = database.getHomeByPostalCode(claim.getInsurableId());
+	if ( home == null ) return null;
+	if ( !home.getOwnerName().equals(customer.getName()) ) return null;
+	return home;
     }
 
 }
