@@ -36,7 +36,15 @@ class PrintCommand extends Command {
     }
 
     //TODO
-    private void runPrintPlan(Database database) {
-        System.out.println("PRINT PLAN feature is not yet implemented.");
+    private void runPrintPlan(Database database) { //this is for the commands by key word "Plan"
+        if (queryType.equals("NUM_CUSTOMERS")) {
+            System.out.println("Number of customers under " + queryValue +
+                    " is " + database.numberOfCustomers(queryValue));
+        } else if (queryType.equals("TOTAL_PAYED_TO_CUSTOMERS")) {
+            System.out.println("Total amount payed under " + queryValue +
+                    " is " + database.totalAmountPayedByCustomer(queryValue));
+        } else {
+            throw new BadCommandException("Invalid PRINT CUSTOMER command.");
+        }
     }
 }

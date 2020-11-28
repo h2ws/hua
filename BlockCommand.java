@@ -32,7 +32,11 @@ class BlockCommand extends Command {
         } if (blockType.equals(Claim.inputTag)) {
             Claim claim = new Claim(tags);
             database.insertClaim(claim);
-            if (processClaim(claim, database)) {
+            if (database.comparePlan(database.getContract(claim.getContractName()).getPlanName()) == false){ //to check if this plan exists. If not, the claims will be  not successful
+                claim.setSuccessful(false);
+                System.out.println("Claim on " + Utils.formattedDate(claim.getDate())
+                        + " for contract " + claim.getContractName() + " was not successful.");
+            } else if (processClaim(claim, database)) {
                 claim.setSuccessful(true);
                 System.out.println("Claim on " + Utils.formattedDate(claim.getDate())
                         + " for contract " + claim.getContractName() + " was successful.");

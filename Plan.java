@@ -9,14 +9,32 @@ abstract class Plan {
     long premium;
     long maxCoveragePerClaim;
     long deductible;
+    boolean nullValue = true;
     RangeCriterion customerAgeCriterion = new RangeCriterion();
     RangeCriterion customerIncomeCriterion = new RangeCriterion();
 
-    Plan(HashMap<String, ArrayList<Tag>> tags) {
-        name = tags.get("NAME").get(0).getValue();
-        premium = Integer.parseInt(tags.get("PREMIUM").get(0).getValue());
-        maxCoveragePerClaim = Integer.parseInt(tags.get("MAX_COVERAGE_PER_CLAIM").get(0).getValue());
-        deductible = Integer.parseInt(tags.get("DEDUCTIBLE").get(0).getValue());
+    Plan(HashMap<String, ArrayList<Tag>> tags) { //Assign the value of the corresponding position to the variable.
+        if (tags.get("NAME") != null) { //It should be exist first then we can use it.
+            name = tags.get("NAME").get(0).getValue();
+        }else{
+            nullValue = false; //If this value does not exist, return false for the subsequent work.
+        }
+        if (tags.get("PREMIUM") != null) {
+            premium = Integer.parseInt(tags.get("PREMIUM").get(0).getValue());
+        }else{
+            nullValue = false;
+        }
+        if (tags.get("MAX_COVERAGE_PER_CLAIM") != null) {
+            maxCoveragePerClaim = Integer.parseInt(tags.get("MAX_COVERAGE_PER_CLAIM").get(0).getValue());
+        }else{
+            nullValue = false;
+        }
+        if (tags.get("DEDUCTIBLE") != null) {
+            deductible = Integer.parseInt(tags.get("DEDUCTIBLE").get(0).getValue());
+        }else{
+            nullValue = false;
+        }
+
 
 
         if (tags.get("CUSTOMER.AGE") != null) {
@@ -59,6 +77,12 @@ abstract class Plan {
     long getMaxCoveragePerClaim() {
         return maxCoveragePerClaim;
     }
+
+    //This method is used to confirm if there is null inside the plan
+    boolean getNullValue() {
+        return nullValue;
+    }
+
 
     long getDeductible() {
         return deductible;
