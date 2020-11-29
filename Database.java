@@ -83,20 +83,41 @@ class Database {
         return null;
     }
 
+
     Home getHomeByPostalCode(String postalCode) {
+	int c = 0;
+	Home r = null;
         for (Home home : homes) {
             if (home.getPostalCode().equals(postalCode))
-                return home;
+	    {
+		    r = home;
+		    c++;
+	    }
+        }
+	//if(!( c == 1 || c == 0)) throw new RuntimeException("TEST");
+        return r;
+    }
+    
+    Car getCarByPlateNumber2(String plateNumber) {
+        for (Car car : cars) {
+            if (car.getPlateNumber().equals(plateNumber))
+	         return car;
         }
         return null;
     }
-    
+
     Car getCarByPlateNumber(String plateNumber) {
+	int c = 0;
+	Car r = null;
         for (Car car : cars) {
             if (car.getPlateNumber().equals(plateNumber))
-                return car;
+	    {
+		    r = car;
+		    c++;
+	    }
         }
-        return null;
+	if(c>1) throw new RuntimeException("TEST");
+        return r;
     }
 
     long totalWealthAmountByCompany(Company company) {
