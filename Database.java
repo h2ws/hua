@@ -133,7 +133,9 @@ class Database {
     long totalClaimAmountByCustomer(String customerName) {
         long totalClaimed = 0;
         for (Claim claim : claims) {
-            if (getContract(claim.getContractName()).getCustomerName().equals(customerName))
+            Contract contract = getContract(claim.getContractName());
+	    Plan planOf = getPlan(contract.getPlanName());
+	    if (planOf !=null && planOf.getNullValue() == true && getContract(claim.getContractName()).getCustomerName().equals(customerName))
                 totalClaimed += claim.getAmount();
         }
         return totalClaimed;
